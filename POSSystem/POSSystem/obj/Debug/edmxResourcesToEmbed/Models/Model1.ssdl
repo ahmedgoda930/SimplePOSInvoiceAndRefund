@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DB_POSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="CashReciept">
+    <Key>
+      <PropertyRef Name="CRID" />
+    </Key>
+    <Property Name="CRID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FK_CustomerID" Type="int" />
+    <Property Name="FK_InvoiceID" Type="int" />
+    <Property Name="CRDate" Type="date" />
+    <Property Name="Total" Type="float" />
+  </EntityType>
+  <EntityType Name="Customers">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="CIN" Type="float" />
+    <Property Name="COUT" Type="float" />
+  </EntityType>
+  <EntityType Name="Invoice">
+    <Key>
+      <PropertyRef Name="INVID" />
+    </Key>
+    <Property Name="INVID" Type="int" Nullable="false" />
+    <Property Name="FK_CustomerID" Type="int" />
+    <Property Name="FK_TypeID" Type="int" />
+    <Property Name="INDate" Type="date" />
+    <Property Name="Total" Type="float" />
+    <Property Name="Paid" Type="float" />
+    <Property Name="Remaind" Type="float" />
+    <Property Name="IsDeleted" Type="bit" />
+  </EntityType>
+  <EntityType Name="InvoiceDetails">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FK_InvoiceID" Type="int" />
+    <Property Name="FK_ItemID" Type="int" />
+    <Property Name="Price" Type="float" />
+    <Property Name="QTY" Type="float" />
+    <Property Name="Total" Type="float" />
+  </EntityType>
+  <EntityType Name="InvoiceType">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="Typ" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Items">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ItemName" Type="nvarchar" MaxLength="100" />
+    <Property Name="Price" Type="float" />
+    <Property Name="Amount" Type="float" />
+  </EntityType>
+  <EntityType Name="RefundINVDetails">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FK_RInvoiceID" Type="int" />
+    <Property Name="FK_ItemID" Type="int" />
+    <Property Name="Price" Type="float" />
+    <Property Name="QTY" Type="float" />
+    <Property Name="Total" Type="float" />
+  </EntityType>
+  <EntityType Name="RefundInvoice">
+    <Key>
+      <PropertyRef Name="RINVID" />
+    </Key>
+    <Property Name="RINVID" Type="int" Nullable="false" />
+    <Property Name="FK_CustomerID" Type="int" />
+    <Property Name="FK_InvoiceID" Type="int" />
+    <Property Name="FK_TypeID" Type="int" />
+    <Property Name="RINDate" Type="date" />
+    <Property Name="Total" Type="float" />
+    <Property Name="IsDeleted" Type="bit" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <Association Name="FK__CashRecie__FK_Cu__286302EC">
+    <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+    <End Role="CashReciept" Type="Self.CashReciept" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="CashReciept">
+        <PropertyRef Name="FK_CustomerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CashRecie__FK_In__29572725">
+    <End Role="Invoice" Type="Self.Invoice" Multiplicity="0..1" />
+    <End Role="CashReciept" Type="Self.CashReciept" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Invoice">
+        <PropertyRef Name="INVID" />
+      </Principal>
+      <Dependent Role="CashReciept">
+        <PropertyRef Name="FK_InvoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Invoice__FK_Cust__164452B1">
+    <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+    <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Invoice">
+        <PropertyRef Name="FK_CustomerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Invoice__FK_Type__173876EA">
+    <End Role="InvoiceType" Type="Self.InvoiceType" Multiplicity="0..1" />
+    <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InvoiceType">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Invoice">
+        <PropertyRef Name="FK_TypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__InvoiceDe__FK_In__1B0907CE">
+    <End Role="Invoice" Type="Self.Invoice" Multiplicity="0..1" />
+    <End Role="InvoiceDetails" Type="Self.InvoiceDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Invoice">
+        <PropertyRef Name="INVID" />
+      </Principal>
+      <Dependent Role="InvoiceDetails">
+        <PropertyRef Name="FK_InvoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__InvoiceDe__FK_It__1BFD2C07">
+    <End Role="Items" Type="Self.Items" Multiplicity="0..1" />
+    <End Role="InvoiceDetails" Type="Self.InvoiceDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Items">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="InvoiceDetails">
+        <PropertyRef Name="FK_ItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RefundInv__FK_Cu__1ED998B2">
+    <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+    <End Role="RefundInvoice" Type="Self.RefundInvoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="RefundInvoice">
+        <PropertyRef Name="FK_CustomerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RefundInv__FK_In__1FCDBCEB">
+    <End Role="Invoice" Type="Self.Invoice" Multiplicity="0..1" />
+    <End Role="RefundInvoice" Type="Self.RefundInvoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Invoice">
+        <PropertyRef Name="INVID" />
+      </Principal>
+      <Dependent Role="RefundInvoice">
+        <PropertyRef Name="FK_InvoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RefundINV__FK_It__25869641">
+    <End Role="Items" Type="Self.Items" Multiplicity="0..1" />
+    <End Role="RefundINVDetails" Type="Self.RefundINVDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Items">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="RefundINVDetails">
+        <PropertyRef Name="FK_ItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RefundINV__FK_RI__24927208">
+    <End Role="RefundInvoice" Type="Self.RefundInvoice" Multiplicity="0..1" />
+    <End Role="RefundINVDetails" Type="Self.RefundINVDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RefundInvoice">
+        <PropertyRef Name="RINVID" />
+      </Principal>
+      <Dependent Role="RefundINVDetails">
+        <PropertyRef Name="FK_RInvoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RefundInv__FK_Ty__20C1E124">
+    <End Role="InvoiceType" Type="Self.InvoiceType" Multiplicity="0..1" />
+    <End Role="RefundInvoice" Type="Self.RefundInvoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InvoiceType">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="RefundInvoice">
+        <PropertyRef Name="FK_TypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DB_POSModelStoreContainer">
+    <EntitySet Name="CashReciept" EntityType="Self.CashReciept" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="InvoiceDetails" EntityType="Self.InvoiceDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="InvoiceType" EntityType="Self.InvoiceType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Items" EntityType="Self.Items" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RefundINVDetails" EntityType="Self.RefundINVDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RefundInvoice" EntityType="Self.RefundInvoice" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__CashRecie__FK_Cu__286302EC" Association="Self.FK__CashRecie__FK_Cu__286302EC">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="CashReciept" EntitySet="CashReciept" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CashRecie__FK_In__29572725" Association="Self.FK__CashRecie__FK_In__29572725">
+      <End Role="Invoice" EntitySet="Invoice" />
+      <End Role="CashReciept" EntitySet="CashReciept" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Invoice__FK_Cust__164452B1" Association="Self.FK__Invoice__FK_Cust__164452B1">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Invoice" EntitySet="Invoice" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Invoice__FK_Type__173876EA" Association="Self.FK__Invoice__FK_Type__173876EA">
+      <End Role="InvoiceType" EntitySet="InvoiceType" />
+      <End Role="Invoice" EntitySet="Invoice" />
+    </AssociationSet>
+    <AssociationSet Name="FK__InvoiceDe__FK_In__1B0907CE" Association="Self.FK__InvoiceDe__FK_In__1B0907CE">
+      <End Role="Invoice" EntitySet="Invoice" />
+      <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__InvoiceDe__FK_It__1BFD2C07" Association="Self.FK__InvoiceDe__FK_It__1BFD2C07">
+      <End Role="Items" EntitySet="Items" />
+      <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RefundInv__FK_Cu__1ED998B2" Association="Self.FK__RefundInv__FK_Cu__1ED998B2">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="RefundInvoice" EntitySet="RefundInvoice" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RefundInv__FK_In__1FCDBCEB" Association="Self.FK__RefundInv__FK_In__1FCDBCEB">
+      <End Role="Invoice" EntitySet="Invoice" />
+      <End Role="RefundInvoice" EntitySet="RefundInvoice" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RefundINV__FK_It__25869641" Association="Self.FK__RefundINV__FK_It__25869641">
+      <End Role="Items" EntitySet="Items" />
+      <End Role="RefundINVDetails" EntitySet="RefundINVDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RefundINV__FK_RI__24927208" Association="Self.FK__RefundINV__FK_RI__24927208">
+      <End Role="RefundInvoice" EntitySet="RefundInvoice" />
+      <End Role="RefundINVDetails" EntitySet="RefundINVDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RefundInv__FK_Ty__20C1E124" Association="Self.FK__RefundInv__FK_Ty__20C1E124">
+      <End Role="InvoiceType" EntitySet="InvoiceType" />
+      <End Role="RefundInvoice" EntitySet="RefundInvoice" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

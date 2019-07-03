@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    h1{
+        font-size:150px;
+        
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<div class="container text-center">
+    <h1>POS<br />System</h1>
+</div>
+<script>
+    $(function () {
+        $('h1').css("margin-top", ($(window).height() - $('h1').height()) / 2);
+        $('h1').css("margin-bottom", ($(window).height() - $('h1').height()) / 2);
+    });
+</script>
+

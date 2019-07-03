@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "CashReciept";
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<br />
+<div class="container">
+    <div class="card">
+        <h5 class="card-header">Cash Reciepte</h5>
+        <div class="card-body">
+            <form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="btn btn-outline-secondary" id="button-addon1">Customer</label>
+                            </div>
+                            @Html.DropDownList("FK_CustomerID", ViewBag.Cust as SelectList, new { @class = "form-control" , @id="cmbcust" })
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="btn btn-outline-secondary" id="button-addon1">Invoices No</label>
+                            </div>
+                            @Html.DropDownList("FK_InvoiceID", ViewBag.Invo as SelectList, new { @class = "form-control", @id = "inv" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="btn btn-outline-secondary" id="button-addon1">Date</label>
+                            </div>
+                            <input type="date" name="CRDate" id="txtdate" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="btn btn-outline-secondary" id="button-addon1">Total</label>
+                            </div>
+                            <input type="text" name="Total" id="txttotal" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary" id="btnsave">Save Reciept</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        //$('#cmbcust').change(function () {
+        //    $('#inv').children("option").remove();
+        //    $.get("/CashReciept/GetInvoices", { id: $("#cmbcust").val() }, function (data) {
+        //        //$("#txtprice").val(data);
+        //        $.each(data, function (index, row) {
+        //            //$('#inv').append("<option value='" + row.INVID + "'>" + row.INVID + "</option>");
+        //            $('#inv').append(new Option(row.INVID, row.INVID));
+        //            //   price = row.Price;
+        //        });
+        //    });
+        //});
+        $(window).load(function () {
+            //$('#inv').children("option").remove();
+            //$.get("/CashReciept/GetInvoices", { CustomerID: $("#cmbcust").val() }, function (data) {
+            //    //$("#txtprice").val(data);
+            //    $.each(data, function (index, row) {
+            //        $('#inv').append("<option value='" + row.INVID + "'>" + row.INVID + "</option>");
+            //        // price = row.Price;
+            //    });
+            //});
+        });
+
+   
+        $('#btnsave').click(function () {
+            if ($('#txttotal').val() != null || $('#txttotal').val() == 0 || $('#txttotal').val() == 0.0) {
+                var cash = {
+                    FK_InvoiceID: $('#inv').val(),
+                    FK_CustomerID: $('#cmbcust').val(),
+                    CRDate: $('#txtdate').val(),
+                    Total: $('#txttotal').val(),
+                };
+                $.ajax({
+                    //   contentType: 'application/json',
+                    dataType: 'json',
+                    type: 'POST',
+                    url: "/CashReciept/SaveOrder",
+                    data: cash,
+                    success: function (result) {
+                        alert('Done Successfuly');
+       
+                    },
+                    error: function () {
+                        alert("Error!");
+                    }
+                });
+            } else {
+                alert('Insert Total');
+                return;
+            }
+            
+        });
+    });
+</script>

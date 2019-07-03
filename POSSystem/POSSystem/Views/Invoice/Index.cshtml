@@ -1,0 +1,307 @@
+﻿
+@{
+    ViewBag.Title = "Invoice";
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<br />
+
+<div class="container">
+    <div class="card">
+        <h2 class="card-header">Invoice Order</h2>
+        <div class="card-body">
+            <!--Order Header-->
+            <div class="row">
+                <div class="col-md-6">
+                    @*<div class="form-group">
+                            <label class="">Serial : </label>
+                        </div>*@
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="btn btn-outline-secondary" id="button-addon1">Serial</label>
+                        </div>
+                        <input type="text" id="txtid" readonly name="INVID" class="form-control" style="text-align:center;font-weight:bold;font-size:15px" value="@ViewBag.ordid" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="btn btn-outline-secondary" id="button-addon1">Customer</label>
+                        </div>
+                        @Html.DropDownList("FK_CustomerID", ViewBag.Cust as SelectList, new { @class = "form-control", @id="cmbcust" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="btn btn-outline-secondary" id="button-addon1">Date</label>
+                        </div>
+                        <input type="date" name="INDate" id="txtdate" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="btn btn-outline-secondary" id="button-addon1">Type</label>
+                        </div>
+                        @Html.DropDownList("FK_TypeID", ViewBag.Types as SelectList, new { @class = "form-control", @id="cmbtyp" })
+                    </div>
+                </div>
+            </div>
+            <!--/ Order Header-->
+            <!--Order Details-->
+            <div class="details">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col" style="width:100px">
+                                #
+                            </th>
+                            <th scope="col" style="width:500px">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="btn btn-outline-secondary" id="button-addon1">Products</label>
+                                    </div>
+                                    @Html.DropDownList("id", ViewBag.items as SelectList, new { @class = "form-control", @id = "cmbitem" })
+                                </div>
+                            </th>
+                            <th scope="col" style="width:300px">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="btn btn-outline-secondary" id="button-addon1">Price</label>
+                                    </div>
+                                    <input value="0.0" type="text" class="form-control"  placeholder="0.0" id="txtprice" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                                </div>
+                            </th>
+                            <th scope="col" style="width:300px">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="btn btn-outline-secondary" id="button-addon1">Amount</label>
+                                    </div>
+                                    <input value="0" type="text" class="form-control" placeholder="0" aria-label="Example text with button addon" id="txtamount" aria-describedby="button-addon1">
+                                </div>
+                            </th>
+                            <th scope="col" style="width:300px">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="btn btn-outline-secondary" id="button-addon1">Total</label>
+                                    </div>
+                                    <input type="text" readonly class="form-control" placeholder="" aria-label="Example text with button addon" id="txttotal" aria-describedby="button-addon1">
+                                </div>
+                            </th>
+                            <th scope="col" style="width:50px">
+                                <button class="btn btn-primary" id="btndown">Down</button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblbody"></tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total</td>
+                            <td><input type="text" name="Total" readonly id="lbltotal" class="form-control" /></td>
+                            <td>EGP</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Paid</td>
+                            <td><input type="text" name="Paid" value="0" id="lblpaid" class="form-control" /></td>
+                            <td>EGP</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Remainder</td>
+                            <td><input type="text" name="Remaind" value="0" readonly id="lblremainder" class="form-control" /></td>
+                            <td>EGP</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!--/ Order Details-->
+            <div class="text-center">
+                <button class="btn btn-primary" id="btnsave">Save Order</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+<script>
+    $(function () {
+        //Input Value CHanges
+        $('#txtprice').keyup(function () {
+            var total = $('#txtprice').val() * $('#txtamount').val();
+            $('#txttotal').val(total);
+        });
+        $('#txtamount').keyup(function () {
+            var total = $('#txtprice').val() * $('#txtamount').val();
+            $('#txttotal').val(total);
+        });
+        $('#lblpaid').keyup(function () {
+            var total = $('#lbltotal').val() - $('#lblpaid').val();
+            $('#lblremainder').val(total);
+        });
+        //Get Price
+        $('#cmbitem').change(function () {
+           
+          //  $('#txttotal').val('');
+            $.get("/Invoice/GetPrice", { id: $("#cmbitem").val() }, function (data) {
+                //$("#txtprice").val(data);
+                $.each(data, function (index, row) {
+                    $("#txtprice").val(row.Price);
+                    var total = $('#txtprice').val() * $('#txtamount').val();
+                    $('#txttotal').val(total);
+                 //   price = row.Price;
+                });
+            });
+        });
+
+        //Append to table
+        var ordtotal=0;
+        var totprice = 0;
+        var IsExist = true;
+        var itemArr = [];
+        $('#btndown').click(function () {
+            IsExist = true;
+            if ($('#tblbody tr').length != 0) {
+               
+                var $tableRows = $("#tblbody tr");
+                $("#tblbody tr").each(function () {
+                    if ($(this).find('td:first-child').text() == $('#cmbitem  option:selected').val()) {
+                        alert("This item : " + $('#cmbitem  option:selected').text() + " is dublicated");
+                        IsExist = false;
+                    }
+                });
+            }
+            if (!IsExist) {
+                return;
+            }
+            if (!chvalue()) {
+                return;
+            }
+            
+            //Append Data To Table
+            $('#tblbody').append(
+                "<tr><td>" + $('#cmbitem  option:selected').val() + "</td><td>" + $('#cmbitem  option:selected').text() + "</td><td>" + $('#txtprice').val() + "</td><td>" + $('#txtamount').val() +
+                "</td><td>" + $('#txttotal').val() + "</td><td><button class='btn btn-danger' id='btndelete'>Remove</button></td></tr>"
+                );
+
+            ordtotal += parseFloat($('#txttotal').val());
+            $('#lbltotal').val(ordtotal);
+            var total = $('#lbltotal').val() - $('#lblpaid').val();
+            $('#lblremainder').val(total);
+
+            //Fill Array
+            itemArr.push({
+                id:1,
+                FK_InvoiceID: $('#txtid').val(),
+                FK_ItemID: $('#cmbitem  option:selected').val(),
+                Price: $('#txtprice').val(),
+                QTY: $('#txtamount').val(),
+                Total: $('#txttotal').val(),
+            });
+         //   console.log(itemArr);
+        });
+        //Value change on load
+        $(window).load(function () {
+
+                $.get("/Invoice/GetPrice", { id: $("#cmbitem").val() }, function (data) {
+                    //$("#txtprice").val(data);
+                    $.each(data, function (index, row) {
+                        $("#txtprice").val(row.Price);
+                        var total = $('#txtprice').val() * $('#txtamount').val();
+                        $('#txttotal').val(total);
+                    });
+                });
+         
+        });
+        //Remove selected row
+        $("#tblbody").on('click', '#btndelete', function () {
+            $(this).closest('tr').remove();
+            ordtotal -= parseFloat($('#txttotal').val());
+            $('#lbltotal').val(ordtotal);
+            var total = $('#lbltotal').val() - $('#lblpaid').val();
+            $('#lblremainder').val(total);
+            itemArr.pop({
+                id:1,
+                FK_InvoiceID: $('#txtid').val(),
+                FK_ItemID: $('tr td:first-child').text(),
+                Price: $('tr td:nth-child(3)').text(),
+                QTY: $('tr td:nth-child(4)'),
+                Total: $('tr td:nth-child(5)'),
+            });
+            //var id = $(this).closest('tr td:first-child').text();
+            //var result = $.grep(itemArr, function (e) {
+            //    return e.id != id;
+            //    itemArr.splice($.inArray(id, itemArr), 1);
+            // //   itemArr.sp
+                console.log(itemArr);
+            //});
+            
+        });
+
+        //Validate Textboxes
+        function chvalue() {
+            var txtpric = $('#txtprice').val();
+            var txtamo = $('#txtamount').val();
+            if (txtpric == '' || txtpric == 0 || txtpric == 0.0) {
+                alert("You must insert price");
+                $('#txtprice').focus();
+                return false;
+            }
+            if (txtamo == "" || txtamo == 0) {
+                alert("You must insert Amount");
+                $('#txtamount').focus();
+                return false;
+            }
+            return true;
+        };
+
+        //Save Order
+        $('#btnsave').click(function () {
+            if (itemArr.length != 0) {
+                //Form Data
+                var order = {
+                    INVID: $('#txtid').val(),
+                    FK_CustomerID: $('#cmbcust').val(),
+                    INDate: $('#txtdate').val(),
+                    FK_TypeID: $('#cmbtyp').val(),
+                    Total: $('#lbltotal').val(),
+                    Paid: $('#lblpaid').val(),
+                    Remaind: $('#lblremainder').val(),
+                    details: itemArr
+                };
+                $.ajax({
+                 //   contentType: 'application/json',
+                    dataType: 'json',
+                    type: 'POST',
+                    url: "/Invoice/SaveOrder",
+                    data: order,
+                    success: function (result) {
+                        alert('Done Successfuly');
+                        var id = parseInt($('#txtid').val()) + 1;
+                        $('#txtid').val(id);
+                        $("#tblbody").children("tr").remove();
+                        $('#txtprice').val('0.0');
+                        $('#txttotal').val('0.0');
+                        $('#lblpaid').val('0.0');
+                        $('#lblremainder').val('0.0');
+                        $('#txtamount').val('0.0');
+                        $('#lbltotal').val('0.0');
+                    },
+                    error: function () {
+                        alert("Error!");
+                    }
+                });
+            } else {
+                alert('Insert Items');
+                return;
+            }
+        });
+        //After Click Save Button Pass All Data View To Controller For Save Database
+      
+    });
+</script>
